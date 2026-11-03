@@ -47,13 +47,15 @@ function setMenu(open){mnav.classList.toggle('open',open);burger.setAttribute('a
 burger.onclick=()=>setMenu(!mnav.classList.contains('open'));
 mnav.addEventListener('click',e=>{if(e.target===mnav||e.target.closest('a'))setMenu(false)});
 addEventListener('keydown',e=>{if(e.key==='Escape'){setMenu(false);closeLB()}});
-addEventListener('resize',()=>{if(innerWidth>=1024)setMenu(false)});
+addEventListener('resize',()=>{if(innerWidth>=1200)setMenu(false)});
 
 /* ---------- jobs helpers ---------- */
 const J=DATA.jobs.map(r=>({order:r[0],cat:r[1],title:r[2],co:r[3],addr:r[4],pay:r[5],dl:r[6],career:r[7],edu:r[8],pref:r[9],hours:r[10],type:r[11],desc:r[12],ben:r[13],contact:r[14],url:r[15]}));
 const NOW=new Date();
 function parseDL(s){if(!s)return null;const d=new Date(s.replace(/(\d)(am|pm)$/i,'$1 $2'));return isNaN(d)?null:d}
-J.forEach(j=>{j.dld=parseDL(j.dl);j.closed=!!(j.dld&&j.dld<NOW);j.cats=j.cat.split('/').map(s=>s.trim()).filter(s=>s&&s!=='-');j.hay=(j.title+' '+j.co+' '+j.addr+' '+j.cat+' '+j.desc).toLowerCase()});
+const TODAY=new Date(NOW.getFullYear(),NOW.getMonth(),NOW.getDate()).getTime();
+/* a listing counts as closed from its deadline day onward */
+J.forEach(j=>{j.dld=parseDL(j.dl);j.closed=!!(j.dld&&new Date(j.dld.getFullYear(),j.dld.getMonth(),j.dld.getDate()).getTime()<=TODAY);j.cats=j.cat.split('/').map(s=>s.trim()).filter(s=>s&&s!=='-');j.hay=(j.title+' '+j.co+' '+j.addr+' '+j.cat+' '+j.desc).toLowerCase()});
 const fmtDate=d=>`${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
 let FEATURED=null;
 function featuredJobs(){
