@@ -329,7 +329,7 @@ V.contact=()=>`${hero('문의','무엇을 도와드릴까요?','협업이나 제
     <p id="c-err" class="req" hidden style="font-size:14.5px"></p>
     <button class="btn full" id="c-submit">문의하기</button>
   </form></div>`;
-const FS='YnViYmxlLnlvdXRoaW1wYWN0QGdtYWlsLmNvbQ==';
+const FS_ENDPOINT='https://formsubmit.co/ajax/bb280b58d2ffca3210d3e1d1b940b6df';
 V.contactInit=()=>{
   const f=document.getElementById('cform');
   f.onsubmit=e=>{e.preventDefault();
@@ -339,7 +339,7 @@ V.contactInit=()=>{
     err.hidden=true;
     const btn=document.getElementById('c-submit');btn.disabled=true;btn.textContent='보내는 중…';
     const v=id=>document.getElementById(id).value.trim();
-    fetch('https://formsubmit.co/ajax/'+atob(FS),{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
+    fetch(FS_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
       body:JSON.stringify({'성함':v('c-name'),'이메일':v('c-email'),'전화번호':v('c-phone')||'-','메세지':v('c-msg'),_subject:'[SilverPath] 새 문의: '+v('c-name'),_replyto:v('c-email'),_template:'table',_captcha:'false'})})
     .then(r=>r.json().catch(()=>({})).then(j=>{if(!r.ok||j.success===false||j.success==='false')throw 0}))
     .then(()=>{f.outerHTML=`<div class="okmsg"><div class="ic">${ico('check')}</div><b>문의가 접수되었습니다</b><p>남겨주신 이메일로 빠르게 답변드리겠습니다.</p></div>`})
@@ -435,7 +435,7 @@ V.surveyInit=()=>{
       if(!last){sv.step++;draw();scrollTo({top:0,behavior:'smooth'});return}
       next.disabled=true;next.textContent='보내는 중…';
       const err=document.getElementById('serr');err.hidden=true;
-      fetch('https://formsubmit.co/ajax/'+atob(FS),{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(surveyPayload())})
+      fetch(FS_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(surveyPayload())})
       .then(r=>r.json().catch(()=>({})).then(j=>{if(!r.ok||j.success===false||j.success==='false')throw 0}))
       .then(()=>{sv.done=true;draw();scrollTo({top:0,behavior:'smooth'})})
       .catch(()=>{next.disabled=false;next.textContent='제출';err.hidden=false});
