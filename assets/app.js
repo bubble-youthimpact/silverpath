@@ -47,7 +47,28 @@ function setMenu(open){mnav.classList.toggle('open',open);burger.setAttribute('a
 burger.onclick=()=>setMenu(!mnav.classList.contains('open'));
 mnav.addEventListener('click',e=>{if(e.target===mnav||e.target.closest('a'))setMenu(false)});
 addEventListener('keydown',e=>{if(e.key==='Escape'){setMenu(false);closeLB()}});
-addEventListener('resize',()=>{if(innerWidth>=1200)setMenu(false)});
+/* header: collapse into the menu button whenever the full nav does not fit */
+const hdrIn=document.querySelector('.hdr-in'),root=document.documentElement;
+function fitNav(){
+  root.classList.remove('navc');
+  const tooTight=hdrIn.scrollWidth>hdrIn.clientWidth+1||innerWidth<760;
+  root.classList.toggle('navc',tooTight);
+  if(!tooTight)setMenu(false);
+}
+addEventListener('resize',fitNav);
+document.fonts&&document.fonts.ready.then(fitNav);
+/* larger text toggle, remembered on this device */
+const fsBtn=document.getElementById('fsbtn');
+function setFS(on){
+  if(on)root.dataset.fs='lg';else delete root.dataset.fs;
+  fsBtn.setAttribute('aria-pressed',on);
+  fsBtn.querySelector('.fsl').textContent=on?'글자 작게':'글자 크게';
+  try{localStorage.setItem('sp-fs',on?'lg':'')}catch(e){}
+  fitNav();
+}
+fsBtn.onclick=()=>setFS(root.dataset.fs!=='lg');
+let fsSaved='';try{fsSaved=localStorage.getItem('sp-fs')||''}catch(e){}
+setFS(fsSaved==='lg');
 
 /* ---------- jobs helpers ---------- */
 const J=DATA.jobs.map(r=>({order:r[0],cat:r[1],title:r[2],co:r[3],addr:r[4],pay:r[5],dl:r[6],career:r[7],edu:r[8],pref:r[9],hours:r[10],type:r[11],desc:r[12],ben:r[13],contact:r[14],url:r[15]}));
