@@ -122,8 +122,8 @@ main{flex:1 0 auto}
 .plogo{width:9.375rem;height:2.5rem;background:var(--card);border-radius:0.75rem;display:grid;place-items:center;padding:0.25rem 0.625rem;overflow:hidden}
 .plogo img{max-height:2rem;width:auto;object-fit:contain}
 .plogo span{font-size:0.78125rem;font-weight:700;color:#2a2a28;text-align:center;line-height:1.2}
-.hero-art{background:var(--cream);border-radius:1.375rem;aspect-ratio:1.2/1;display:grid;place-items:center;overflow:hidden;max-width:100%}
-.hero-art img{width:100%;height:100%;object-fit:contain}
+.hero-art{background:#fffdee;border-radius:1.375rem;aspect-ratio:1.2/1;display:grid;place-items:center;overflow:hidden;max-width:100%;position:relative}
+.hero-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
 .cats-sec{text-align:center;padding-block:3.75rem 2.5rem}
 .cats-sec h2{font-size:clamp(1.625rem,3.6vw,2rem);margin-top:0.625rem}
 .cats-sec .sub{color:var(--green-text);margin-top:1.25rem;font-size:1rem;line-height:1.6}
