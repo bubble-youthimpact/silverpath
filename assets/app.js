@@ -123,7 +123,7 @@ function featuredJobs(){
 const FILTER_MAP={'서비스':['서비스'],'생산':['생산'],'운전·운송·배송':['운전·운송·배송','물류'],'공공·복지':['공공·복지','사회복지','복지'],'설치·정비·전기·전자':['설치·정비·전기·전자','기술'],'경영·사무·금융·보험':['경영·사무·금융·보험'],'의료':['의료'],'교육·보육':['교육'],'건설·건축':['건설'],'IT·개발':['IT·개발','개발관리'],'회계·세무·재무':['회계·세무·재무'],'고객상담':['고객상담'],'상품기획·MD':['상품기획·MD'],'영업':['영업'],'문화':['문화']};
 const FILTERS=Object.keys(FILTER_MAP);
 const matchF=(j,f)=>j.cats.some(c=>FILTER_MAP[f].some(k=>c.includes(k)));
-const EASY=[['open','지원 가능한 공고만'],['noexp','경력 무관'],['short','하루 4시간 이하'],['days3','주 3일 이하'],['morning','오전 근무']];
+const EASY=[['noexp','경력 무관'],['short','하루 4시간 이하'],['days3','주 3일 이하'],['morning','오전 근무']];
 const jobState={q:'',f:'',sido:'',sgg:'',ez:[],shown:20,scroll:0};
 const resetJobs=(o={})=>Object.assign(jobState,{q:'',f:'',sido:'',sgg:'',ez:[],saved:false,shown:20,scroll:0},o);
 /* saved jobs (관심 공고): kept in this browser only, no login */
