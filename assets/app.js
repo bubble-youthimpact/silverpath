@@ -124,7 +124,7 @@ const FILTER_MAP={'서비스':['서비스'],'생산':['생산'],'운전·운송�
 const FILTERS=Object.keys(FILTER_MAP);
 const matchF=(j,f)=>j.cats.some(c=>FILTER_MAP[f].some(k=>c.includes(k)));
 const EASY=[['noexp','경력 무관'],['short','하루 4시간 이하'],['days3','주 3일 이하'],['morning','오전 근무']];
-const jobState={q:'',f:'',sido:'',sgg:'',ez:[],shown:20,scroll:0};
+const jobState={q:'',f:'',sido:'',sgg:'',ez:[],saved:false,shown:20,scroll:0};
 const resetJobs=(o={})=>Object.assign(jobState,{q:'',f:'',sido:'',sgg:'',ez:[],saved:false,shown:20,scroll:0},o);
 /* saved jobs (관심 공고): kept in this browser only, no login */
 const SAVED_KEY='sp-saved';
@@ -278,7 +278,7 @@ V.jobsInit=()=>{
   function draw(){
     const all=filteredJobs();
     document.getElementById('jcount').textContent=all.length.toLocaleString();
-    const sv=jobState.saved;document.getElementById('jsavedn').textContent=SAVED.filter(id=>J.some(j=>j.sid===id)).length;
+    const sv=!!jobState.saved;document.getElementById('jsavedn').textContent=SAVED.filter(id=>J.some(j=>j.sid===id)).length;
     const st=document.getElementById('jsaved');st.classList.toggle('on',sv);st.setAttribute('aria-pressed',sv);st.querySelector('svg').outerHTML=ico(sv?'heartFill':'heart');
     document.getElementById('jsavedinfo').hidden=!sv;document.getElementById('jsavedshare').hidden=!SAVED.length;
     document.querySelector('.fpanel').hidden=sv;document.querySelector('.easy').hidden=sv;document.getElementById('jform').hidden=sv;
