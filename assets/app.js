@@ -160,6 +160,9 @@ function savedListLink(){
 }
 const SIDO_LIST=[...SIDO.map(s=>s[0]),'재택근무','기타'].filter(k=>J.some(j=>j.sido===k));
 const SGG_OF={};J.forEach(j=>{if(j.sido&&j.sgg)(SGG_OF[j.sido]=SGG_OF[j.sido]||new Set()).add(j.sgg)});
+/* every listing keeps the number it has in the full list, whatever filter is used */
+{const full=J.filter(j=>!j.closed).concat(J.filter(j=>j.closed));full.forEach((j,i)=>j.no=full.length-i)}
+const OPEN_COUNT=J.filter(j=>!j.closed).length;
 function filteredJobs(){
   if(jobState.saved)return savedJobs();
   const q=jobState.q.trim().toLowerCase();
@@ -191,6 +194,7 @@ V.home=()=>{
     <p class="eyebrow" style="margin:0">카테고리</p>
     <h2>나에게 딱 맞는 일자리를 찾아보세요</h2>
     <p class="sub">경험을 존중하는 다양한 산업의 기회를 한눈에 살펴보세요.<br>분야와 역할별로 정리된 카테고리에서, 나에게 맞는 일자리를 쉽게 찾을 수 있습니다.</p>
+    <a class="jcount" href="#jobs" data-cat="" aria-label="채용 공고 ${J.length.toLocaleString()}건 보기"><b data-countup="${J.length}">${J.length.toLocaleString()}</b><span>채용 공고</span></a>
     <div class="cats">${cats.map(([c,i])=>`<a class="cat" href="#jobs" data-cat="${c}"><span class="ic">${ico(i)}</span><b>${c}</b><small>일자리 보기 →</small></a>`).join('')}</div>
   </section>
   <section class="band"><div class="wrap sec">
@@ -215,6 +219,16 @@ V.home=()=>{
   </section>`;
 };
 V.homeInit=()=>{
+  /* count up the listings number when it comes into view */
+  const cu=document.querySelector('[data-countup]');
+  if(cu&&'IntersectionObserver' in window&&!matchMedia('(prefers-reduced-motion: reduce)').matches){
+    const end=+cu.dataset.countup;cu.style.minWidth=cu.getBoundingClientRect().width+'px';cu.textContent='0';
+    const io=new IntersectionObserver(es=>{if(!es[0].isIntersecting)return;io.disconnect();
+      const t0=performance.now(),dur=1600;
+      const step=t=>{const k=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-k,3);cu.textContent=Math.round(end*e).toLocaleString();if(k<1)requestAnimationFrame(step)};
+      requestAnimationFrame(step)},{threshold:.6});
+    io.observe(cu);
+  }
   document.getElementById('hsearch').onsubmit=e=>{e.preventDefault();resetJobs({q:document.getElementById('hq').value});go('jobs')};
   document.querySelectorAll('[data-cat]').forEach(a=>a.onclick=()=>{resetJobs({f:a.dataset.cat})});
 };
@@ -274,7 +288,7 @@ V.jobsInit=()=>{
     fsgg.disabled=!sg.length;fsgg.value=jobState.sgg;
     document.querySelectorAll('.ez').forEach(b=>{const on=jobState.ez.includes(b.dataset.ez);b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
     list.innerHTML=all.length?all.slice(0,jobState.shown).map((j,ix)=>`<article class="job${j.closed?' expired':''}"><div class="job-main">
-      <div class="num">#${all.length-ix}</div>${tagHTML(j)}
+      <div class="num">#${j.no.toLocaleString()}</div>${tagHTML(j)}
       <div class="co">${esc(j.co)}</div>
       <h3><a href="#job-${j.order}">${esc(j.title)}</a></h3>
       <div class="meta">${j.addr?`<span>${ico('pin')}${esc(j.addr)}</span>`:''}<span>${ico('dollar')}${esc(j.pay||'면접 후 결정')}</span></div>
